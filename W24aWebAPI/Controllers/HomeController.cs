@@ -37,7 +37,7 @@ namespace W24aWebAPI.Controllers
 
 
         [HttpGet]
-        [Route("Get")]
+        [Route("GetAll")]
         //public IActionResult GetEmployeeData()
         public IActionResult GetAllEmployee()
         {
@@ -47,7 +47,7 @@ namespace W24aWebAPI.Controllers
 
 
         [HttpGet]
-        [Route("{id}")]
+        [Route("GetById{id}")]
         public IActionResult GetEmployeeById(int id)
         {
             var Emp = _db.Employee.FirstOrDefault(x => x.id == id);  // search for employee with matching ID
@@ -61,10 +61,15 @@ namespace W24aWebAPI.Controllers
 
 
         [HttpDelete]
-        [Route("{id}")]
+        [Route("Delete/{id}")]
         public IActionResult Delete(int id)
         {
             var Emp = _db.Employee.FirstOrDefault(x => x.id == id);     // matching with database id
+            if (Emp == null)
+            {
+                return NotFound($"Employee with ID {id} not found");
+            }
+
             _db.Employee.Remove(Emp);
             _db.SaveChanges();
             return Ok(Emp);
@@ -72,7 +77,7 @@ namespace W24aWebAPI.Controllers
 
 
         [HttpPut]
-        [Route("{id}")]
+        [Route("Update/{id}")]
         public IActionResult Update(int id, [FromBody] Employee obj)       // Saving edited page with information
         {
             if (id != obj.id)
