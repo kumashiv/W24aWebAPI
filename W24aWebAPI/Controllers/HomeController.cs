@@ -38,11 +38,27 @@ namespace W24aWebAPI.Controllers
 
         [HttpGet]
         [Route("Get")]
-        public IActionResult GetEmployeeData()
+        //public IActionResult GetEmployeeData()
+        public IActionResult GetAllEmployee()
         {
             var Emp = _db.Employee.ToList();
             return Ok(Emp);
         }
+
+
+        [HttpGet]
+        [Route("{id}")]
+        public IActionResult GetEmployeeById(int id)
+        {
+            var Emp = _db.Employee.FirstOrDefault(x => x.id == id);  // search for employee with matching ID
+
+            if (Emp == null)
+            {
+                return NotFound($"Employee with ID {id} not found");
+            }
+            return Ok(Emp);
+        }
+
 
         [HttpDelete]
         [Route("{id}")]
@@ -68,7 +84,6 @@ namespace W24aWebAPI.Controllers
             _db.SaveChanges();
             return Ok();
         }
-
 
     }
 }
